@@ -17,7 +17,6 @@ import * as yup from "yup";
 // import { resetInvoice, newInvoice } from "../../store/invoiceSlice";
 import reducer from "../store";
 import SalaryScaleHeader from "./SalaryScaleHeader";
-import ProductImagesTab from "./tabs/ProductImagesTab";
 import ShippingTab from "./tabs/ShippingTab";
 
 function SalaryScale(props) {

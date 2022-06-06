@@ -15,6 +15,10 @@ import InputAdornment from "@material-ui/core/InputAdornment";
 import WorkOutlineOutlinedIcon from "@material-ui/icons/WorkOutlineOutlined";
 import Input from "@material-ui/core/Input";
 import AccountTreeOutlinedIcon from "@material-ui/icons/AccountTreeOutlined";
+import { FieldArray, Field, Form, Formik } from "formik";
+import { Card, CardContent } from "@material-ui/core";
+import Autocomplete from "@material-ui/lab/Autocomplete";
+import PostAddIcon from "@material-ui/icons/PostAdd";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -34,12 +38,12 @@ const useStyles = makeStyles((theme) => ({
 function ShippingTab(props) {
   const dispatch = useDispatch();
   const classes = useStyles();
-  const [amountJunior, setAmountJunior] = useState("");
-  const [amountSenior, setAmountSenior] = useState("");
-  const [amountMidLevel, setAmountMidLevel] = useState("");
+  // const [amount, setAmount] = useState("");
 
   const [jobs, setJobs] = useState([]);
-  const [jobId, setJobId] = useState(0);
+  // const [jobId, setJobId] = useState(0);
+
+  // const [employeeLevel, setEmployeeLevel] = useState("");
 
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
@@ -56,210 +60,97 @@ function ShippingTab(props) {
       { TransitionComponent: Slide }
     );
   };
-  const handleAmountSeniorChange = (event) => {
-    setAmountSenior(event.target.value);
-  };
-
-  const handleAmountJuniorChange = (event) => {
-    setAmountJunior(event.target.value);
-  };
-
-  const handleAmountMidLevelChange = (event) => {
-    setAmountMidLevel(event.target.value);
+  const handleAmountChange = (event) => {
+    setAmount(event.target.value);
   };
 
   useEffect(() => {
     getJobs().then((response) => {
       console.log("jobs response in approve: ", response);
-      setJobs(response);
+      // setJobs(response);
     });
   }, []);
 
   return (
-    <>
-      {jobs.map((job) => (
-        <div className="pb-12 pt-12" key={job?.id}>
-          <div className="mb-2">
-            <Input
-              id="input-with-icon-adornment"
-              value={job?.name || ""}
-              onChange={(event, value) => {
-                console.log("value vvv:", value);
-                console.log("value.id: ", value.id);
-                setJobId(value.id);
-              }}
-              disableUnderline={true}
-              variant="standard"
-              startAdornment={
-                <InputAdornment position="start">
-                  <WorkOutlineOutlinedIcon />
-                </InputAdornment>
-              }
-              style={{ fontWeight: 500 }}
-            />
-          </div>
-
-          <div className="flex -mx-4 mt-7 mb-3">
-            <TextField
-              className="mr-5"
-              id="extraShippingFee"
-              variant="outlined"
-              value="Senior"
-              fullWidth
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <AccountTreeOutlinedIcon position="start" />
-                  </InputAdornment>
-                ),
-                style: { fontSize: 14, fontWeight: 300 },
-              }}
-            />
-
-            <TextField
-              label="Amount"
-              id="extraShippingFee"
-              variant="outlined"
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">$</InputAdornment>
-                ),
-              }}
-              value={amountSenior}
-              onChange={handleAmountSeniorChange}
-              fullWidth
-            />
-          </div>
-
-          {/* mid level */}
-
-          <div className="flex -mx-4 mt-7">
-            <TextField
-              className="mr-5"
-              id="extraShippingFee"
-              variant="outlined"
-              value="Mid Level"
-              // onChange={handleNetAmountChange}
-              fullWidth
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <AccountTreeOutlinedIcon position="start" />
-                  </InputAdornment>
-                ),
-                style: { fontSize: 14, fontWeight: 300 },
-              }}
-            />
-
-            <TextField
-              label="Amount"
-              id="extraShippingFee"
-              variant="outlined"
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">$</InputAdornment>
-                ),
-              }}
-              value={amountMidLevel}
-              onChange={handleAmountMidLevelChange}
-              fullWidth
-            />
-          </div>
-
-          {/* junior */}
-          <div className="flex -mx-4 mt-7">
-            <TextField
-              className="mr-5"
-              id="extraShippingFee"
-              variant="outlined"
-              value="junior"
-              // onChange={handleNetAmountChange}
-              fullWidth
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <AccountTreeOutlinedIcon position="start" />
-                  </InputAdornment>
-                ),
-                style: { fontSize: 14 },
-              }}
-            />
-
-            <TextField
-              label="Amount"
-              id="extraShippingFee"
-              variant="outlined"
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">$</InputAdornment>
-                ),
-              }}
-              value={amountJunior}
-              onChange={handleAmountJuniorChange}
-              fullWidth
-            />
-          </div>
-        </div>
-      ))}
-
-      <motion.div
-        initial={{ opacity: 0, x: 20 }}
-        animate={{ opacity: 1, x: 0, transition: { delay: 0.3 } }}
-      >
-        <Grid
-          container
-          direction="row-reverse"
-          justifyContent="flex-start"
-          alignItems="flex-end"
-          style={{
-            paddingTop: "11rem",
+    <Card>
+      <CardContent>
+        <Formik
+          initialValues={{
+            entities: [{ jobId: 0, amount: 0, employeeLevel: " " }],
+          }}
+          onSubmit={async (values) => {
+            console.log("values: ", values);
+            return dispatch(addSalaryScale(values));
           }}
         >
-          <Grid item>
-            <Button
-              className="whitespace-nowrap mx-4"
-              variant="contained"
-              color="secondary"
-              style={{
-                padding: "1rem",
-                paddingLeft: "3rem",
-                paddingRight: "3rem",
-              }}
-              // onClick={handleRemoveProduct}
-            >
-              Cancel
-            </Button>
-          </Grid>
-          <Grid item>
-            <Button
-              className="whitespace-nowrap mx-4"
-              variant="contained"
-              color="secondary"
-              // disabled={_.isEmpty(dirtyFields) || !isValid}
-              style={{
-                padding: "1rem",
-                paddingLeft: "3rem",
-                paddingRight: "3rem",
-              }}
-              onClick={(ev) => {
-                // dispatch(addSalaryScale({ jobId, amount, employyLevel}));
-                ev.stopPropagation();
-                handleCreateInvoiceMessageClick(ev);
-              }}
-            >
-              Create
-            </Button>
-          </Grid>
-        </Grid>
-      </motion.div>
-    </>
+          {({ values, isSubmitting }) => (
+            <Form autoComplete="off">
+              <Grid container>
+                <Grid item>
+                  <FieldArray name="entities">
+                    {({ push, remove, Formik }) => (
+                      <React.Fragment>
+                        {values?.entities.map((_, index) => (
+                          <Grid container item key={index}>
+                            <Grid item>
+                              <Field
+                                name={`entities[${index}].jobId`}
+                                id="entities.jobId"
+                                component={TextField}
+                                label="JobId"
+                              />
+                            </Grid>
+
+                            <Grid item>
+                              <Field
+                                name={`entities[${index}].amount`}
+                                id="entities.amount"
+                                component={TextField}
+                                type="number"
+                                label="amount"
+                              />
+                            </Grid>
+
+                            <Grid item>
+                              <Field
+                                name={`entities[${index}].employeeLevel`}
+                                id="entities.employeeLevel"
+                                component={TextField}
+                                label="employeeLevel"
+                              />
+                            </Grid>
+
+                            <Grid item>
+                              <Button onClick={() => remove(index)}>
+                                Delete
+                              </Button>
+                            </Grid>
+                          </Grid>
+                        ))}
+
+                        <Grid item>
+                          <Button
+                            onClick={() =>
+                              push({ jobId: 0, amount: 0, employeeLevel: "" })
+                            }
+                          >
+                            Add
+                          </Button>
+                        </Grid>
+                      </React.Fragment>
+                    )}
+                  </FieldArray>
+                </Grid>
+              </Grid>
+
+              <pre>{JSON.stringify({ values }, null, 4)}</pre>
+              <button type="submit">Submit</button>
+            </Form>
+          )}
+        </Formik>
+      </CardContent>
+    </Card>
   );
 }
 
 export default ShippingTab;
-
-const levels = [
-  { id: 1, level: "senior" },
-  { id: 2, level: "mid_level" },
-  { id: 3, level: "junior" },
-];

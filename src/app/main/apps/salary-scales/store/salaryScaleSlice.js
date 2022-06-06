@@ -30,6 +30,7 @@ export const removeProduct = createAsyncThunk(
 export const addSalaryScale = createAsyncThunk(
   "salaryScalesApp/salaryScale/addSalaryScale",
   async (salaryScale, { dispatch, getState }) => {
+    console.log('salary Scale: ', salaryScale)
     const response = await axios.post("/salary-scales", salaryScale);
     const data = await response.data.data;
     console.log("Hi I am Here in add new Job: ", data);

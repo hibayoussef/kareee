@@ -34,6 +34,7 @@
         "draft-js": "0.11.7",
         "draftjs-to-html": "0.9.1",
         "express": "^4.17.2",
+        "formik": "^2.2.9",
         "formsy-react": "2.2.5",
         "framer-motion": "4.1.17",
         "google-map-react": "2.1.10",
